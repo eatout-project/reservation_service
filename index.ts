@@ -24,11 +24,6 @@ const db = knex({
     }
 });
 
-
-app.get('/', (req, res) => {
-
-})
-
 app.post('/createReservationRequest',  (req: Request, res: Response) => createReservationRequest(req, res, db));
 
 app.listen(port, () => {
