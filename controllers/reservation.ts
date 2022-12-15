@@ -5,8 +5,27 @@ import {ReservationApiObject} from "../ApiObjects/businessobject";
 export const createReservationRequest = (req: Request, res: Response, db: Knex) => {
     console.log(req.body);
     const reservationApiObject: ReservationApiObject = req.body;
-    db.insert(reservationApiObject).into('reservations')
-        .then(affectedRows => res.status(200).json(reservationApiObject))
+    db.insert(reservationApiObject).into('reservations').returning('id')
+        .then(id => {
+            db.select('*').from('reservations').where('id', id[0])
+                .then(data => {
+                    console.log('dataaaaaaaaaaa, ', data[0])
+                    res.status(200).json(data[0]);
+                })
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(400).json('Could not register reservation')
+        });
+}
+
+export const getReservations = (req: Request, res: Response, db: Knex) => {
+    console.log(req.body);
+    db.select('*').from('reservations').where('customerId', req.body.id)
+        .then(data => {
+            console.log(data)
+            res.status(200).json(data);
+        })
         .catch(error => {
             console.log(error);
             res.status(400).json('Could not register reservation')
