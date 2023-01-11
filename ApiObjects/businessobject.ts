@@ -14,3 +14,15 @@ export interface ReservationApiObject {
     customerName: string;
     status: ReservationStatus
 }
+
+export interface ReservationWithIdApiObject {
+    id: number;
+    restaurantName: string;
+    amountOfGuests: number;
+    timeOfArrival: string;
+    restaurantId: number;
+    customerId: number;
+    customerName: string;
+    status: ReservationStatus
+}
+
