@@ -3,7 +3,12 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import {knex} from 'knex';
-import {createReservationRequest, getReservations, updateReservationRequest} from "./controllers/reservation";
+import {
+    createReservationRequest,
+    getCustomerReservations,
+    getRestaurantAcceptedReservations, getRestaurantWaitingReservations,
+    updateReservationRequest
+} from "./controllers/reservation";
 
 dotenv.config();
 
@@ -26,7 +31,11 @@ const db = knex({
 
 app.post('/createReservationRequest',  (req: Request, res: Response) => createReservationRequest(req, res, db));
 
-app.post('/getReservations',  (req: Request, res: Response) => getReservations(req, res, db));
+app.post('/getReservations',  (req: Request, res: Response) => getCustomerReservations(req, res, db));
+
+app.post('/getAcceptedReservations',  (req: Request, res: Response) => getRestaurantAcceptedReservations(req, res, db));
+
+app.post('/getWaitingReservations',  (req: Request, res: Response) => getRestaurantWaitingReservations(req, res, db));
 
 app.post('/updateReservationRequest', (req: Request, res: Response) => updateReservationRequest(req, res, db))
 
