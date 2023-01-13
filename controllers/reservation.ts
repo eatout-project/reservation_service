@@ -4,17 +4,24 @@ import {ReservationApiObject, ReservationWithIdApiObject} from "../ApiObjects/bu
 
 export const createReservationRequest = (req: Request, res: Response, db: Knex) => {
     const reservationApiObject: ReservationApiObject = req.body;
-    db.insert(reservationApiObject).into('reservations').returning('id')
-        .then(id => {
-            db.select('*').from('reservations').where('id', id[0])
-                .then(data => {
-                    res.status(200).json(data[0]);
-                })
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(400).json('Could not register reservation')
-        });
+    db.transaction(trx => {
+        trx.insert(reservationApiObject).into('reservations')
+            .then(id => {
+                trx.select('*').from('reservations').where('restaurantId', reservationApiObject.restaurantId)
+                    .andWhere('customerId', reservationApiObject.customerId)
+                    .andWhere('timeOfArrival', reservationApiObject.timeOfArrival)
+                    .then(reservation => {
+                        trx.commit();
+                        res.status(200).json(reservation[0]);
+                    })
+            })
+            .catch(error => {
+                console.log(error);
+                trx.rollback();
+                res.status(400).json('Could not register reservation')
+            });
+    })
+
 }
 
 export const getCustomerReservations = (req: Request, res: Response, db: Knex) => {
