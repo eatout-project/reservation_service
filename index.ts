@@ -23,20 +23,11 @@ const db = knex({
     client: 'mysql2',
     connection: {
         host: process.env.RESERVATION_DB_HOST ? `${process.env.RESERVATION_DB_HOST}` : `127.0.0.1`,
-        port: process.env.RESERVATION_DB_PORT ? parseInt(`${process.env.RESERVATION_DB_PORT}`) : 3308,
+        port: process.env.RESERVATION_DB_PORT ? parseInt(`${process.env.RESERVATION_DB_PORT}`) : 3306,
         user: process.env.RESERVATION_DB_USER ? `${process.env.RESERVATION_DB_USER}` : `root`,
         database: process.env.RESERVATION_DB ? `${process.env.RESERVATION_DB}` : 'db'
     }
 });
-
-console.log(
-    {
-        host: process.env.RESERVATION_DB_HOST ? `${process.env.RESERVATION_DB_HOST}` : `127.0.0.1`,
-        port: process.env.RESERVATION_DB_PORT ? parseInt(`${process.env.RESERVATION_DB_PORT}`) : 3308,
-        user: process.env.RESERVATION_DB_USER ? `${process.env.RESERVATION_DB_USER}` : `root`,
-        database: process.env.RESERVATION_DB ? `${process.env.RESERVATION_DB}` : 'db'
-    }
-)
 
 app.get('/',  (req: Request, res: Response) => {
     return res.status(200).json('Reservation service is running')
